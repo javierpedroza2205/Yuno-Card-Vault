@@ -25,6 +25,7 @@ message CreateCardRequest {
 message CreateCardResponse {
     string status = 1;
     string message = 2;
+    string id_card = 3;
 }
 
 // get cards information

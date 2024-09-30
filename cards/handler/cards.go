@@ -19,14 +19,15 @@ func (y *YunoCards) GetClient() db.Repository {
 	}
 }
 
-func (y *YunoCards) RegisterCard(ctx context.Context, req *pbCards.CreateCardRequest,  res *pbCards.CreateCardResponse) error{
-	err := y.GetClient().RegisterCard(ctx, req)
+func (y *YunoCards) RegisterCard(ctx context.Context, req *pbCards.CreateCardRequest,  res *pbCards.CreateCardResponse) (error){
+	idCard , err := y.GetClient().RegisterCard(ctx, req)
 	if err != nil{
 		res.Message = "Error Create Card"
 		res.Status = "406"
 	}else{
 		res.Message = "Create Card Success"
 		res.Status = "200"
+		res.IdCard = idCard
 	}
 	return nil
 }

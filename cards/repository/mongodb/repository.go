@@ -27,7 +27,7 @@ const (
 )
 
 type Repository interface {
-	RegisterCard(context.Context, *pbCards.CreateCardRequest)(error)
+	RegisterCard(context.Context, *pbCards.CreateCardRequest)(string, error)
 	GetCardDetails(context.Context, string, string)(*pbCards.InformationCard, error)
 	DeleteCard(context.Context, string, string)(error, int)
 	UpdateSingleCard(context.Context, *pbCards.UpdateSingleCardRequest)(*pbCards.UpdateCardResponse, error)
@@ -44,10 +44,11 @@ func (repo *CardsRepository) collectionCards() *mongo.Collection{
 }
 
 
-func (repo *CardsRepository) RegisterCard(ctx context.Context, req *pbCards.CreateCardRequest) (error){
+func (repo *CardsRepository) RegisterCard(ctx context.Context, req *pbCards.CreateCardRequest) (string, error){
 	now := time.Now().String()
+	idCard := primitive.NewObjectID()
 	var newCard = &models.CardData{
-		ID: primitive.NewObjectID(),
+		ID: idCard,
 		CreatedAt: now,
 		CardType: req.CardType,
 		CardHoldername: req.CardHolderName,
@@ -73,9 +74,9 @@ func (repo *CardsRepository) RegisterCard(ctx context.Context, req *pbCards.Crea
 
 	_, errCreate := repo.collectionCards().InsertOne(context.Background(), newCard)
 	if errCreate != nil {
-		return errCreate
+		return "", errCreate
 	}
-	return  nil
+	return  idCard.Hex(), nil
 }
 
 
