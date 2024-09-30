@@ -1,0 +1,76 @@
+syntax = "proto3";
+package cards;
+option go_package = "cards/proto;cards";
+service Cards{
+    rpc RegisterCard(CreateCardRequest) returns (CreateCardResponse) {} // create card
+    rpc GetCardDetails (GetSingleCardRequest) returns (InformationCard) {} // get card detail
+//    rpc GetCardsbyClient (GetCardsbyClientRequest) returns (InformationCardsClient) {} // get cards by client, can be n cards
+    rpc UpdateSingleCard (UpdateSingleCardRequest) returns (UpdateCardResponse) {} // update sinlge card, filter by card_id
+    rpc UpdateManyCards (UpdateManyCardsRequest) returns (UpdateManyCardsResponse) {} // uodate many cards from list infomration
+    rpc DeleteCard(GetSingleCardRequest) returns (CreateCardResponse) {} // Delete card, this delete is physical
+} 
+
+// create cards
+message CreateCardRequest {
+    string card_holder_name = 1;
+    string card_type = 2;
+    string expiry_date = 3;
+    string code_card = 4;
+    string  number_card = 5;
+    string alias = 6;
+    string id_client = 7;
+
+}
+
+message CreateCardResponse {
+    string status = 1;
+    string message = 2;
+}
+
+// get cards information
+
+message GetSingleCardRequest{
+    string id_card = 1;
+    string id_client = 2;
+}
+
+message GetCardsbyClientRequest{
+    string client_id = 1;
+}
+
+message InformationCard{
+    string card_holder_name = 1;
+    string card_type = 2;
+    string id_card = 3;
+    string alias = 4;
+    string number_card = 5;
+    string created_at = 6;
+}
+
+message InformationCardsClient{
+    repeated InformationCard information = 1;
+}
+
+// update single card
+message UpdateSingleCardRequest{
+    string card_holder_name = 1;
+    string alias = 2;
+    string id_card = 3;
+    string id_client = 4;
+
+}
+
+message UpdateManyCardsRequest{
+    repeated UpdateSingleCardRequest information_update = 1;
+    string id_client = 2;
+}
+
+message UpdateManyCardsResponse{
+    repeated UpdateCardResponse process = 1;
+}
+
+message UpdateCardResponse {
+    string status = 1;
+    string message = 2;
+    string id_card = 3;
+}
